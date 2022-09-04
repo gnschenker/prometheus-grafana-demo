@@ -31,7 +31,7 @@ services:
       - /:/rootfs:ro
     command:
       - '--path.procfs=/host/proc'
-      - '--path.rootfs=/rootfs'
+      - '--path.rootfs=/rootfs' # Necessary for collecting host filesystem metrics (does not work on Docker for Mac).
       - '--path.sysfs=/host/sys'
       - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
     ports:
@@ -48,7 +48,10 @@ services:
       - /var/run:/var/run:ro
       - /sys:/sys:ro
       - /var/lib/docker:/var/lib/docker:ro
-      # - /cgroup:/cgroup:ro #doesn't work on MacOS only for Linux
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/machine-id:/etc/machine-id:ro
+      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id:ro
+      - /cgroup:/cgroup:ro # doesn't work on MacOS only for Linux
     ports:
       - 8080:8080
 
